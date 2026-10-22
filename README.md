@@ -1,69 +1,160 @@
-# Pichler PKOM4 Home Assistant Bridge
+# Pichler PKOM4 Local
 
-Integrazione Home Assistant per leggere e comandare **Pichler PKOM⁴ tramite la rete locale**, usando il gateway Micro Nabto già impiegato da PICHLERluft.
+[![Home Assistant](https://img.shields.io/badge/Home%20Assistant-2026.1%2B-18BCF2?logo=homeassistant&logoColor=white)](https://www.home-assistant.io/)
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5?logo=homeassistantcommunitystore&logoColor=white)](https://github.com/hacs/integration)
+[![Local polling](https://img.shields.io/badge/IoT%20class-Local%20polling-78A55A)](#connection-and-privacy)
+[![License](https://img.shields.io/badge/License-GPL--3.0--or--later-blue)](LICENSE)
 
-Non richiede password cloud, adattatori Modbus o un servizio sul Mac. Il collegamento avviene direttamente tra Home Assistant e la macchina su UDP 5570. L'email già autorizzata sul dispositivo identifica la sessione locale.
+Local Home Assistant integration for **Pichler PKOM⁴** ventilation, heating, cooling, and domestic hot water systems.
 
-**Versione iniziale 0.1.0.** Letture e scritture sono state provate su una PKOM4 con boiler e gateway modello Nabto 1030. L'integrazione non è ancora stata installata su un Home Assistant di produzione; i test del framework sono eseguiti con Home Assistant 2026.1.0. Non è un prodotto ufficiale Pichler.
+Monitor your unit and control its operating settings directly from Home Assistant through the built-in Micro Nabto gateway. No cloud password, Modbus adapter, or separate bridge service is required.
 
-## Controlli, come nell'app
+This is an independent community integration, not affiliated with or endorsed by Pichler.
 
-| Menu PICHLERluft | Entità Home Assistant | Funzioni |
-|---|---|---|
-| Modalità | Selettore modalità | Spento, Estate, Inverno, Automatico, Vacanza |
-| Vacanza | Data fine vacanza + setpoint ambiente | Impostare prima la data; poi selezionare Vacanza |
-| Ventilazione | Selettore ventilazione | Automatico, livelli 1–4 |
-| Temperatura | Numero setpoint ambiente | 10–30 °C, passo 0,5 °C |
-| Raffreddare | Numero setpoint raffrescamento | 15–40 °C, passo 0,5 °C |
-| Consenso raffrescamento | Selettore | No, Sì, Eco |
-| Acqua calda | Numero setpoint boiler | 20–75 °C, passo 0,5 °C |
-| Riscaldamento elettrico | Interruttore | Consenso al riscaldamento elettrico del boiler |
-| Riscaldamento rapido | Interruttore | Boost acqua calda |
+## Features
 
-Il setpoint ambiente è condiviso con la temperatura della modalità Vacanza, come nel dispositivo. L'opzione Eco è presente nell'app Android; la versione iOS può presentare un'interfaccia diversa.
+- **21 sensors** for temperatures, airflow, power, energy, operating settings, and diagnostics.
+- **9 controls** for operating mode, ventilation, temperature setpoints, cooling, hot water, and holidays.
+- **Local communication** over your home network, with readings every 30 seconds.
+- **Verified commands** with device readback rather than optimistic state updates.
+- **UI configuration** with English and Italian entity names. No YAML required.
 
-Le impostazioni vengono scritte **solo quando si aziona un controllo**, anche da un'automazione. Nessuna scrittura avviene alla configurazione, all'avvio o durante il polling. L'integrazione controlla intervalli e passi, verifica la risposta della macchina e rilegge lo stato senza aggiornarlo in modo ottimistico. Non ripete automaticamente una scrittura fallita. Un gruppo di impostazioni viene validato prima dell'invio, ma è applicato tramite RPC separati, come nell'app: non è una transazione atomica.
+## Compatibility
 
-### Risultato delle prove reali
+| Requirement | Details |
+| --- | --- |
+| Home Assistant | 2026.1.0 or later |
+| Device | Pichler PKOM4 with a compatible legacy Micro Nabto gateway |
+| Network | Home Assistant must be able to reach the gateway's local IPv4 address on UDP port 5570 |
+| Device access | Full Nabto ID and an account email already authorized on the unit |
 
-- Confermati da rilettura: modalità Spento/Estate/Inverno/Automatico/Vacanza, data vacanza, livelli manuali 1–4, i tre setpoint di temperatura, consenso raffrescamento No/Sì/Eco, riscaldamento elettrico e boost.
-- Tutte le impostazioni modificate durante le prove sono state ripristinate e rilette.
-- Le prove verificano l'accettazione dei comandi e i registri risultanti, non un ciclo termico completo o le prestazioni di compressori e resistenze.
-- **Ventilazione automatica:** sulla macchina provata il comando viene accettato, ma il registro continua a riportare l'ultimo livello manuale. È stato osservato anche dopo aver comandato Automatico dall'app ufficiale. Il bridge mantiene l'opzione e segnala il mancato riscontro; non inventa uno stato "Automatico". Il comportamento su altri firmware resta da verificare.
+Tested on a PKOM4 with an integrated hot water tank and a Nabto model 1030 gateway. Compatibility with other gateway models and firmware versions has not yet been established. **Nabto Edge 5-only devices are not supported.**
 
-Non sono inclusi reset di contatori, parametri di installazione, gestione degli account cloud o programmazione settimanale delle versioni dell'app che la espongono. Il mirror copre i controlli PKOM4 dei menu confrontati, non qualsiasi funzione di qualsiasi versione PICHLERluft.
+## Installation
 
-## Misure disponibili
+### HACS
 
-21 sensori: temperature ambiente/esterna/mandata/ripresa/espulsione e boiler centro/fondo, due portate d'aria, energia cumulata, potenze dei compressori e della ventilazione, potenza totale calcolata, livelli ventilazione, setpoint, modalità grezza, codice anomalia e parola di stato.
+This integration is available as a **custom repository**.
 
-Aggiornamento ogni 30 secondi, con sessione persistente. Se il dispositivo non risponde, le entità diventano non disponibili e la lettura successiva tenta una nuova sessione. Il contatore dei filtri non è esposto: la sua conversione in giorni non è stata confermata.
+1. Open **HACS** in Home Assistant.
+2. Open the menu and select **Custom repositories**.
+3. Add the following URL and select **Integration** as the category:
 
-## Installazione tramite HACS
+   ```text
+   https://github.com/tommyz94/pichler-pkom4-homeassistant-bridge
+   ```
 
-Requisiti: Home Assistant **2026.1.0 o successivo**, HACS e accesso LAN al gateway PKOM4. Non è compatibile con il solo protocollo Nabto Edge 5.
+4. Find **Pichler PKOM4 Local** in HACS and download it.
+5. Restart Home Assistant.
+6. Go to **Settings → Devices & services → Add integration** and search for **Pichler PKOM4 Local**.
 
-1. In HACS aprire **Repository personalizzati**.
-2. Aggiungere `https://github.com/tommyz94/pichler-pkom4-homeassistant-bridge`, categoria **Integrazione**.
-3. Scaricare **Pichler PKOM4 Local** e riavviare Home Assistant.
-4. In **Impostazioni → Dispositivi e servizi → Aggiungi integrazione**, cercare **Pichler PKOM4 Local**.
-5. Inserire IP locale della macchina, ID Nabto completo ed email già abilitata nell'app.
+### Manual installation
 
-Il numero visibile nell'app potrebbe essere abbreviato con puntini: serve l'ID completo. Il flusso verifica identità e modello del dispositivo prima di creare le entità. È consigliata una prenotazione DHCP per mantenere stabile l'IP.
+1. Download this repository.
+2. Copy the `custom_components/pichler_pkom4_local` directory into your Home Assistant `config/custom_components/` directory.
+3. Restart Home Assistant.
+4. Add **Pichler PKOM4 Local** from **Settings → Devices & services**.
 
-In alternativa, copiare `custom_components/pichler_pkom4_local` in `/config/custom_components/` e riavviare. Nessuna modifica a `configuration.yaml` è necessaria.
+## Configuration
 
-## Privacy e rete
+The setup dialog asks for three values:
 
-La repository contiene codice, metadati del protocollo e test sintetici. Non contiene configurazioni personali, ID di dispositivi reali, email di account, password, certificati, APK o acquisizioni di rete.
+| Field | Description |
+| --- | --- |
+| Local IP address | The PKOM4 gateway's IPv4 address on your home network. A DHCP reservation is recommended. |
+| Full Nabto ID | The complete device identifier shown in PICHLERluft. An abbreviated ID ending in an ellipsis is not sufficient. |
+| Account email | The email address of an account already authorized to access the device. No account password is requested. |
 
-IP, ID Nabto ed email vengono inseriti dal proprietario nell'interfaccia di Home Assistant e conservati **solo nella sua configurazione Home Assistant**, come per le altre integrazioni. Non sono inviati a GitHub o a un servizio di questo progetto. Il bridge non contatta i server cloud Pichler/LS Control/Nabto. HACS e Home Assistant scaricano normalmente codice e dipendenze durante l'installazione.
+Setup checks the device identity and model before adding the integration. Once connected, all entities are grouped under a single PKOM4 device.
 
-La modalità locale Micro Nabto qui usata identifica il client tramite email e usa traffico locale non cifrato con checksum. Utilizzarla su una LAN fidata; non esporre UDP 5570 a Internet. Il bridge non cambia protezioni, account o impostazioni di rete del dispositivo.
+## Controls
 
-## Sviluppo e pubblicazione
+| Control | Entity type | Available settings |
+| --- | --- | --- |
+| Operating mode | Select | Off, Summer, Winter, Automatic, Holiday |
+| Ventilation | Select | Automatic, levels 1–4 |
+| Room temperature setpoint | Number | 10–30 °C, in 0.5 °C steps |
+| Cooling temperature setpoint | Number | 15–40 °C, in 0.5 °C steps |
+| Cooling permission | Select | No, Yes, Eco |
+| Hot water setpoint | Number | 20–75 °C, in 0.5 °C steps |
+| Hot water boost | Switch | Request rapid hot water heating |
+| Hot water electric heating | Switch | Allow electric heating of the hot water tank |
+| Holiday end | Date | Set the holiday end date |
 
-Repository prevista: `tommyz94/pichler-pkom4-homeassistant-bridge`.
+For holiday operation, set the end date before selecting **Holiday** mode. The room temperature setpoint is shared with the holiday temperature setting on the device.
+
+The electric heating switch controls **permission to use the heater**; its state does not indicate that the heater is currently drawing power.
+
+Controls use standard Home Assistant entities and can be added to dashboards, scripts, and automations. Commands are sent only when a control is used, including by an automation. Setup, startup, and routine polling do not change device settings.
+
+### Command confirmation
+
+Each write is validated, sent to the unit, and checked against a fresh device reading. If the resulting value does not match the request, the integration reports an error. Failed writes are not automatically retried.
+
+Multiple setting changes are sent as separate commands, not as an atomic transaction. If a command fails, check the current device state before retrying a sequence.
+
+## Sensors
+
+| Category | Measurements |
+| --- | --- |
+| Air temperatures | Room, outdoor, supply, extract, and exhaust air |
+| Hot water | Tank middle and bottom temperatures |
+| Airflow | Supply and extract airflow, in m³/h |
+| Power | Climate compressor, hot water compressor, ventilation, and calculated total power, in W |
+| Energy | Cumulative energy consumption, in kWh |
+| Operating settings | Current fan level, ventilation setting, room temperature setpoint, and hot water setpoint |
+| Diagnostics | Raw operating mode, fault code, and status word |
+
+The total power sensor is calculated from the three reported power components. The energy sensor is a cumulative counter, not a daily consumption figure.
+
+## Known limitations
+
+### Automatic ventilation
+
+On the tested firmware, selecting **Automatic** ventilation is acknowledged by the gateway, but the readable setting continues to report the previous manual level. The same behavior was observed after selecting Automatic in the official app.
+
+The option remains available, but the integration reports an unconfirmed command if the requested setting cannot be read back. Manual levels 1–4 have been verified. Behavior on other firmware versions may differ.
+
+### Feature coverage
+
+The integration supports the operating controls listed above. It does not expose weekly schedules, installer parameters, counter resets, cloud account management, or a filter-life estimate. The filter counter's conversion to remaining days has not been verified.
+
+Hardware testing has confirmed command acceptance and register readback. It does not establish the thermal performance or completion of a full heating or cooling cycle.
+
+## Troubleshooting
+
+### Setup cannot connect
+
+- Check that Home Assistant can reach the gateway's local IP address. Being able to use PICHLERluft remotely does not establish local connectivity from Home Assistant.
+- Confirm the full Nabto ID and use an email already authorized on the device.
+- Check firewall or VLAN rules for UDP port 5570 between Home Assistant and the gateway.
+- Confirm that the gateway uses the supported legacy Micro Nabto protocol.
+
+### Entities become unavailable
+
+When a read fails, the entities become unavailable. The next polling attempt establishes a new session. If the problem persists, check the gateway's network connection and whether its IP address has changed.
+
+### A command is not confirmed
+
+Check the actual setting in Home Assistant and PICHLERluft before retrying. For Automatic ventilation, see the firmware limitation above.
+
+### Reporting an issue
+
+Open a [GitHub issue](https://github.com/tommyz94/pichler-pkom4-homeassistant-bridge/issues) with your Home Assistant version, integration version, gateway model or firmware if known, and steps to reproduce the problem. Include relevant error messages, with personal information removed.
+
+Do not publish account emails, Nabto IDs, network captures, or credentials.
+
+## Connection and privacy
+
+Device communication stays between Home Assistant and the PKOM4 gateway. The integration does not contact Pichler, LS Control, or Nabto cloud services, and does not send device configuration to this project. Home Assistant and HACS still download code and dependencies during installation and updates.
+
+The IP address, Nabto ID, and authorized email are stored in your Home Assistant configuration. The local Micro Nabto connection identifies the client by email and uses unencrypted traffic with checksums. Keep it on a trusted network and do not expose UDP port 5570 to the internet.
+
+## Contributing
+
+Bug reports, compatibility reports, and pull requests are welcome. Use synthetic data in tests and remove personal identifiers from logs and examples.
+
+To run the development checks:
 
 ```sh
 python3.13 -m venv .venv
@@ -73,14 +164,10 @@ python3.13 -m venv .venv
 .venv/bin/ruff format --check .
 ```
 
-I test automatici usano solo dati sintetici e trasporti simulati: non inviano comandi a una macchina reale. Per contribuire, non inserire credenziali o dump personali nei test, nelle issue o nei log.
+Automated tests use simulated transports and do not communicate with a real device.
 
-Dopo aver creato la repository vuota su GitHub, pubblicare il branch locale:
+## License and acknowledgements
 
-```sh
-git push -u origin HEAD:main
-```
+Licensed under [GPL-3.0-or-later](LICENSE).
 
-Il remote `origin` è già impostato al percorso indicato. Nessun push viene eseguito dagli script del progetto. HACS può usare il branch predefinito anche senza release. Per offrire una versione selezionabile, creare una release GitHub `v0.1.0`, coerente con `manifest.json` (un solo tag Git non equivale a una release GitHub). Non occorre caricare uno ZIP.
-
-Licenza **GPL-3.0-or-later**. Il framing Micro Nabto è fornito da [GenvexNabto](https://github.com/superrob/genvexnabto); i mapping sono specifici per PKOM4. Vedere [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Micro Nabto framing is provided by [GenvexNabto](https://github.com/superrob/genvexnabto), with PKOM4-specific register mappings in this integration. See [Third-party notices](THIRD_PARTY_NOTICES.md) for details.
