@@ -3,7 +3,7 @@
   "name": "Pichler PKOM4 Local",
   "version": "0.1.0",
   "config_flow": true,
-  "documentation": "https://github.com/tommyz94/pichler-pkom4-home-assistant-bridge",
+  "documentation": "https://github.com/tommyz94/pichler-pkom4-homeassistant-bridge",
   "iot_class": "local_polling",
   "requirements": [
     "genvexnabto==1.5.4"
@@ -12,5 +12,5 @@
     "@tommyz94"
   ],
   "integration_type": "device",
-  "issue_tracker": "https://github.com/tommyz94/pichler-pkom4-home-assistant-bridge/issues"
+  "issue_tracker": "https://github.com/tommyz94/pichler-pkom4-homeassistant-bridge/issues"
 }

@@ -44,7 +44,7 @@ Aggiornamento ogni 30 secondi, con sessione persistente. Se il dispositivo non r
 Requisiti: Home Assistant **2026.1.0 o successivo**, HACS e accesso LAN al gateway PKOM4. Non è compatibile con il solo protocollo Nabto Edge 5.
 
 1. In HACS aprire **Repository personalizzati**.
-2. Aggiungere `https://github.com/tommyz94/pichler-pkom4-home-assistant-bridge`, categoria **Integrazione**.
+2. Aggiungere `https://github.com/tommyz94/pichler-pkom4-homeassistant-bridge`, categoria **Integrazione**.
 3. Scaricare **Pichler PKOM4 Local** e riavviare Home Assistant.
 4. In **Impostazioni → Dispositivi e servizi → Aggiungi integrazione**, cercare **Pichler PKOM4 Local**.
 5. Inserire IP locale della macchina, ID Nabto completo ed email già abilitata nell'app.
@@ -63,7 +63,7 @@ La modalità locale Micro Nabto qui usata identifica il client tramite email e u
 
 ## Sviluppo e pubblicazione
 
-Repository prevista: `tommyz94/pichler-pkom4-home-assistant-bridge`.
+Repository prevista: `tommyz94/pichler-pkom4-homeassistant-bridge`.
 
 ```sh
 python3.13 -m venv .venv
