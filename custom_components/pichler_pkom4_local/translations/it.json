@@ -1,0 +1,143 @@
+{
+  "title": "Pichler PKOM4 locale",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Pichler PKOM4 locale",
+        "description": "Connessione locale, letture ogni 30 secondi. I comandi vengono inviati solo quando azioni un controllo. Non serve la password cloud.",
+        "data": {
+          "host": "Indirizzo IP locale",
+          "device_id": "ID Nabto completo",
+          "email": "Email autorizzata sulla macchina"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Connessione locale non riuscita. Verifica rete, ID ed email."
+    },
+    "abort": {
+      "already_configured": "Questa PKOM4 è già configurata."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "temperature_ist": {
+        "name": "Temperatura ambiente"
+      },
+      "t1_zuluft": {
+        "name": "Temperatura mandata"
+      },
+      "t3_aussenzuluft": {
+        "name": "Temperatura esterna"
+      },
+      "t4_fortluft": {
+        "name": "Temperatura espulsione"
+      },
+      "t7_abluft": {
+        "name": "Temperatura ripresa"
+      },
+      "t21_speicher_mitte": {
+        "name": "Boiler centro"
+      },
+      "t20_speicher_unten": {
+        "name": "Boiler fondo"
+      },
+      "luftmenge_zu": {
+        "name": "Portata mandata"
+      },
+      "luftmenge_ab": {
+        "name": "Portata ripresa"
+      },
+      "energieverbrauch": {
+        "name": "Energia consumata"
+      },
+      "leistung_hk_kompr": {
+        "name": "Potenza compressore clima"
+      },
+      "leistung_bw_kompr": {
+        "name": "Potenza compressore acqua calda"
+      },
+      "leistung_plat_vent": {
+        "name": "Potenza ventilazione"
+      },
+      "power_total": {
+        "name": "Potenza totale"
+      },
+      "ventilation_ist": {
+        "name": "Livello ventilazione attuale"
+      },
+      "ventilation": {
+        "name": "Ventilazione"
+      },
+      "temperature_soll_normal": {
+        "name": "Temperatura ambiente impostata"
+      },
+      "hotwater": {
+        "name": "Temperatura boiler impostata"
+      },
+      "op_mode": {
+        "name": "Modalità"
+      },
+      "malfunction": {
+        "name": "Codice anomalia"
+      },
+      "status_bits": {
+        "name": "Stato grezzo"
+      }
+    },
+    "number": {
+      "temperature_soll_normal": {
+        "name": "Temperatura ambiente impostata"
+      },
+      "hotwater": {
+        "name": "Temperatura boiler impostata"
+      },
+      "temperature_soll_active_cooling": {
+        "name": "Temperatura raffrescamento impostata"
+      }
+    },
+    "select": {
+      "op_mode": {
+        "name": "Modalità",
+        "state": {
+          "off": "Spento",
+          "summer": "Estate",
+          "winter": "Inverno",
+          "automatic": "Automatico",
+          "holiday": "Vacanza"
+        }
+      },
+      "ventilation": {
+        "name": "Ventilazione",
+        "state": {
+          "automatic": "Automatico",
+          "level_1": "Livello 1",
+          "level_2": "Livello 2",
+          "level_3": "Livello 3",
+          "level_4": "Livello 4"
+        }
+      },
+      "temperature_is_active_cooling": {
+        "name": "Consenso al raffrescamento",
+        "state": {
+          "no": "No",
+          "yes": "Sì",
+          "eco": "Eco"
+        }
+      }
+    },
+    "switch": {
+      "hotwater_fast_heating": {
+        "name": "Riscaldamento rapido acqua calda"
+      },
+      "hotwater_e_heating": {
+        "name": "Riscaldamento elettrico acqua calda"
+      }
+    },
+    "date": {
+      "holiday_end": {
+        "name": "Fine vacanza"
+      }
+    }
+  }
+}

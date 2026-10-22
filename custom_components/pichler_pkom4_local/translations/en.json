@@ -1,0 +1,143 @@
+{
+  "title": "Pichler PKOM4 local",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Pichler PKOM4 local",
+        "description": "Local connection with readings every 30 seconds. Commands are sent only when you use a control. No cloud password is needed.",
+        "data": {
+          "host": "Local IP address",
+          "device_id": "Full Nabto ID",
+          "email": "Account email authorized on the device"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect locally. Check network, ID and email."
+    },
+    "abort": {
+      "already_configured": "This PKOM4 is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "temperature_ist": {
+        "name": "Room temperature"
+      },
+      "t1_zuluft": {
+        "name": "Supply air temperature"
+      },
+      "t3_aussenzuluft": {
+        "name": "Outdoor air temperature"
+      },
+      "t4_fortluft": {
+        "name": "Exhaust air temperature"
+      },
+      "t7_abluft": {
+        "name": "Extract air temperature"
+      },
+      "t21_speicher_mitte": {
+        "name": "Hot water tank middle"
+      },
+      "t20_speicher_unten": {
+        "name": "Hot water tank bottom"
+      },
+      "luftmenge_zu": {
+        "name": "Supply airflow"
+      },
+      "luftmenge_ab": {
+        "name": "Extract airflow"
+      },
+      "energieverbrauch": {
+        "name": "Energy consumption"
+      },
+      "leistung_hk_kompr": {
+        "name": "Climate compressor power"
+      },
+      "leistung_bw_kompr": {
+        "name": "Hot water compressor power"
+      },
+      "leistung_plat_vent": {
+        "name": "Ventilation power"
+      },
+      "power_total": {
+        "name": "Total power"
+      },
+      "ventilation_ist": {
+        "name": "Current fan level"
+      },
+      "ventilation": {
+        "name": "Ventilation"
+      },
+      "temperature_soll_normal": {
+        "name": "Room temperature setpoint"
+      },
+      "hotwater": {
+        "name": "Hot water setpoint"
+      },
+      "op_mode": {
+        "name": "Operating mode"
+      },
+      "malfunction": {
+        "name": "Fault code"
+      },
+      "status_bits": {
+        "name": "Raw status"
+      }
+    },
+    "number": {
+      "temperature_soll_normal": {
+        "name": "Room temperature setpoint"
+      },
+      "hotwater": {
+        "name": "Hot water setpoint"
+      },
+      "temperature_soll_active_cooling": {
+        "name": "Cooling temperature setpoint"
+      }
+    },
+    "select": {
+      "op_mode": {
+        "name": "Operating mode",
+        "state": {
+          "off": "Off",
+          "summer": "Summer",
+          "winter": "Winter",
+          "automatic": "Automatic",
+          "holiday": "Holiday"
+        }
+      },
+      "ventilation": {
+        "name": "Ventilation",
+        "state": {
+          "automatic": "Automatic",
+          "level_1": "Level 1",
+          "level_2": "Level 2",
+          "level_3": "Level 3",
+          "level_4": "Level 4"
+        }
+      },
+      "temperature_is_active_cooling": {
+        "name": "Cooling permission",
+        "state": {
+          "no": "No",
+          "yes": "Yes",
+          "eco": "Eco"
+        }
+      }
+    },
+    "switch": {
+      "hotwater_fast_heating": {
+        "name": "Hot water boost"
+      },
+      "hotwater_e_heating": {
+        "name": "Hot water electric heating"
+      }
+    },
+    "date": {
+      "holiday_end": {
+        "name": "Holiday end"
+      }
+    }
+  }
+}
