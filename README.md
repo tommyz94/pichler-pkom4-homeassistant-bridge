@@ -132,7 +132,9 @@ Hardware testing has confirmed command acceptance and register readback. It does
 
 ### Entities become unavailable
 
-When a read fails, the entities become unavailable. The next polling attempt establishes a new session. If the problem persists, check the gateway's network connection and whether its IP address has changed.
+Idle connections are renewed before reuse. If a read fails, the integration reconnects and retries that read once within the same polling cycle. If both attempts fail, the entities become unavailable; cached measurements are not presented as current readings. Check the gateway's network connection and whether its IP address has changed if this persists.
+
+If you are upgrading from 0.1.0, install the update and restart Home Assistant to load the session-recovery fix.
 
 ### A command is not confirmed
 

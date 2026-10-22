@@ -1,7 +1,7 @@
 {
   "domain": "pichler_pkom4_local",
   "name": "Pichler PKOM4 Local",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "config_flow": true,
   "documentation": "https://github.com/tommyz94/pichler-pkom4-homeassistant-bridge",
   "iot_class": "local_polling",

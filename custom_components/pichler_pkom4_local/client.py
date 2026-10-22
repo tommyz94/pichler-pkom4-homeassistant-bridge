@@ -23,6 +23,9 @@ from genvexnabto.protocol import (
 
 from .registers import REGISTERS
 
+# Renew conservatively before the observed 30-second idle-session failure.
+SESSION_IDLE_SECONDS = 15
+
 DATAPOINTS = (
     "TEMPERATURE_IST",
     "T1_ZULUFT",
@@ -150,6 +153,7 @@ class Pkom4Client:
         self.client_id = secrets.token_bytes(4)
         self.server_id = b"\0" * 4
         self.sequence = 0
+        self._last_activity = None
 
     def close(self):
         with self._lock:
@@ -157,6 +161,17 @@ class Pkom4Client:
                 self.socket.close()
             self.socket = None
             self.server_id = b"\0" * 4
+            self._last_activity = None
+
+    def _ensure_session(self):
+        if (
+            self.socket is not None
+            and self._last_activity is not None
+            and time.monotonic() - self._last_activity >= SESSION_IDLE_SECONDS
+        ):
+            self.close()
+        if self.socket is None:
+            self._connect()
 
     def _receive(self, kind=None, sequence=None):
         deadline = time.monotonic() + 4
@@ -225,16 +240,23 @@ class Pkom4Client:
         packet = self._receive(GenvexPacketType.DATA, self.sequence)
         if packet[4:8] != self.server_id:
             raise Pkom4Error("Session mismatch")
-        return crypt_body(packet)
+        body = crypt_body(packet)
+        self._last_activity = time.monotonic()
+        return body
 
     def read(self):
         with self._lock:
-            return self._read_locked()
+            # Reads are idempotent: recover once inside this poll, never return stale data.
+            for attempt in range(2):
+                try:
+                    return self._read_locked()
+                except Pkom4Error:
+                    if attempt:
+                        raise
 
     def _read_locked(self):
         try:
-            if self.socket is None:
-                self._connect()
+            self._ensure_session()
             dp = [
                 {"obj": REGISTERS[n]["R_OBJ"], "address": REGISTERS[n]["R_ADDR"]}
                 for n in DATAPOINTS
@@ -283,8 +305,7 @@ class Pkom4Client:
         # PKOM4 processes one setpoint per RPC, as does the official app.
         with self._lock:
             try:
-                if self.socket is None:
-                    self._connect()
+                self._ensure_session()
                 for command in commands:
                     reply = self._query(command, allow_write=True)
                     if reply not in (b"\0", b"\x01"):

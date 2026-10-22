@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1
+
+- Renew idle local sessions before polling or sending a command, preventing
+  periodic unavailable states caused by reusing an expired connection.
+- Reconnect and retry a failed read once within the same polling cycle.
+  Persistent failures still mark entities unavailable; stale values are not returned.
+- Preserve single-attempt writes and device readback verification.
+
+
 ## 0.1.0
 
 - Local Micro Nabto connection with device identity verification.
